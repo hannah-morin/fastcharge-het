@@ -30,7 +30,7 @@ view(tesla)
 
 fpro = profiles %>% filter(filename == "Tesla Model S CCS adapter_150kW_SOC vs charge speed" )
 #fpro = select(fpro, power, soc)
-fpro <- fpro %>%
+fpro <- main %>%
   mutate(
     dsoc = c(NA, diff(soc)),
     dsoc = ifelse(dsoc < 0, NA, dsoc),
@@ -44,6 +44,11 @@ fpro <- fpro %>%
     check_diff = energy.trans_kWh - pack_kWh + first(soc)*pack_kWh,  # should be ~0 if linear assumption holds
     mutate(across(c(total.time_min,energy.trans_kWh,pack_size,pack_kWh, check_diff), ~ round(.x, 3)))
   ) 
+
+ggplot(fpro, aes(x = soc, y = power)) +
+  geom_point() + 
+  labs(title = first(fpro$filename)) +
+  theme(legend.position = "none"
 
 # After the mutate, check for the condition and select columns if needed
 if (checks == FALSE) {
